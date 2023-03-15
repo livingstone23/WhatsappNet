@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using WhatsapNet.Api.Model;
+using WhatsapNet.Api.Service.WhatsappCloud.SendMessage;
+using WhatsapNet.Api.Util;
 
 namespace WhatsapNet.Api.Controllers
 {
@@ -8,9 +10,32 @@ namespace WhatsapNet.Api.Controllers
     [Route("api/whatsapp")]
     public class WhatsappController : Controller
     {
-        [HttpGet("test")]
-        public IActionResult Sample()
+
+        private readonly IWhatsappCloudSendMessage _whatsappCloudSendMessage;
+        private readonly IUtil _util;
+
+        public WhatsappController(IWhatsappCloudSendMessage whatsappCloudSendMessage, IUtil util)
         {
+            _whatsappCloudSendMessage = whatsappCloudSendMessage;
+            _util = util;
+        }
+        
+
+        [HttpGet("test")]
+        public async Task<IActionResult> Sample()
+        {
+            var data = new
+            {
+                messaging_product = "whatsapp",
+                to = "34698971985",
+                type = "text", 
+                text = new
+                {
+                    body ="Probando interfaz de la api"
+                }
+            };
+
+            var result = await _whatsappCloudSendMessage.Execute(data);
             return Ok("Ok sample");
         }
 
@@ -39,7 +64,14 @@ namespace WhatsapNet.Api.Controllers
         {
             try
             {
-                return Ok("EVENT_RECEIVED");
+
+                var Message = body.Entry[0]?.Changes[0]?.Value?.Messages[0];
+                if (Message != null)
+                {
+                    var userNumber = Message.From;
+                    var userText = GetUserText(Message);
+                }
+                    return Ok("EVENT_RECEIVED");
             }
             catch (Exception e)
             {
@@ -47,6 +79,37 @@ namespace WhatsapNet.Api.Controllers
             }
 
 
+        }
+
+        private string GetUserText(Message message)
+        {
+            string TypeMessage = message.Type;
+
+            if (TypeMessage.ToUpper() == "TEXT")
+            {
+                return message.Text.Body;
+            }
+            else if (TypeMessage.ToUpper() == "INTERACTIVE")
+            {
+                string interactiveType = message.Interactive.Type;
+
+                if (interactiveType.ToUpper() == "LIST_REPLY")
+                {
+                    return message.Interactive.List_Reply.Title;
+                }
+                else if (interactiveType.ToUpper() == "BUTTON_REPLY")
+                {
+                    return message.Interactive.Button_Reply.Title;
+                }
+                else
+                {
+                    return string.Empty;
+                }
+            }
+            else
+            {
+                return string.Empty;
+            }
         }
     }
 }
