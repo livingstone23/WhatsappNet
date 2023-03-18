@@ -3,6 +3,7 @@ using Microsoft.Extensions.Primitives;
 using WhatsapNet.Api.Model;
 using WhatsapNet.Api.Service.WhatsappCloud.SendMessage;
 using WhatsapNet.Api.Util;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace WhatsapNet.Api.Controllers
 {
@@ -43,7 +44,7 @@ namespace WhatsapNet.Api.Controllers
         [HttpGet]
         public IActionResult VerifyToken()
         {
-            String AcessToken = "SAHKDSDTTAEFE232256456EWRE43";
+            string AcessToken = "SAHKDSDTTAEFE232256456EWRE43";
 
             var token = Request.Query["hub.verify_token"].ToString();
             var challenge = Request.Query["hub.challenge"].ToString();
@@ -59,6 +60,13 @@ namespace WhatsapNet.Api.Controllers
 
         }
 
+
+
+        /// <summary>
+        /// Metodo para recibir el mensaje enviado por el cliente.
+        /// </summary>
+        /// <param name="body"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> ReceivedMessage([FromBody] WhatsAppCloudModel body )
         {
@@ -70,8 +78,50 @@ namespace WhatsapNet.Api.Controllers
                 {
                     var userNumber = Message.From;
                     var userText = GetUserText(Message);
+
+                    object objectMessage;
+
+                    switch (userText.ToUpper())
+                    {
+
+                        case "TEXT":
+                            objectMessage = _util.TextMessage("Este es un ejemplo de texto", userNumber);
+                            break;
+
+                        case "IMAGE":
+                            objectMessage = _util.ImageMessage("https://biostoragecloud.blob.core.windows.net/resource-udemy-whatsapp-node/image_whatsapp.png", userNumber);
+                            break;
+
+                        case "AUDIO":
+                            objectMessage = _util.AudioMessage("https://biostoragecloud.blob.core.windows.net/resource-udemy-whatsapp-node/audio_whatsapp.mp3", userNumber);
+                            break;
+                            
+                        case "VIDEO":
+                            objectMessage = _util.VideoMessage("https://biostoragecloud.blob.core.windows.net/resource-udemy-whatsapp-node/video_whatsapp.mp4", userNumber);
+                            break;
+
+                        case "DOCUMENT":
+                            objectMessage = _util.DocumentMessage("https://biostoragecloud.blob.core.windows.net/resource-udemy-whatsapp-node/document_whatsapp.pdf", userNumber);
+                            break;
+
+                        ///revisar location
+                        case "LOCATION":
+                            objectMessage = _util.LocationMessage(userNumber);
+                            break;
+
+                        case "BUTTON":
+                            objectMessage = _util.ButtonMessage(userNumber);
+                            break;
+
+                        default:
+                            objectMessage = _util.TextMessage("Este es un ejemplo de texto", userNumber);
+                            break;
+                    }
+
+                    await _whatsappCloudSendMessage.Execute(objectMessage);
                 }
-                    return Ok("EVENT_RECEIVED");
+                    
+                return Ok("EVENT_RECEIVED");
             }
             catch (Exception e)
             {
