@@ -81,13 +81,21 @@ namespace WhatsapNet.Api.Controllers
 
                     object objectMessage;
 
-                    if (userText.ToUpper().Contains("BUENAS"))
+                    if (userText.ToUpper().Contains("HOLA"))
                     {
-                        objectMessage = _util.TextMessage("Hola, Bienvenido a PROVIMAD, ¿Como te puedo ayudar?. ", userNumber);
+                        objectMessage = _util.TextMessage("Hola, Bienvenido a PROVIMAD, ¿Como te puedo ayudar?, para el menu principal escribe MENU  ", userNumber);
                     }
                     else if (userText.ToUpper().Contains("AYUDA"))
                     {
                         objectMessage = _util.TextMessage("Hola, estas en el servicio de WhatsApp PROVIMAD, ¡Para ir al menu principal, escribir la palabra 'MENU'! ", userNumber);
+                    }
+                    else if (userText.ToUpper().Contains("GRACIAS"))
+                    {
+                        objectMessage = _util.TextMessage("Gracias a ti por  escribirme. ", userNumber);
+                    }
+                    else if (userText.ToUpper().Contains("ADIOS"))
+                    {
+                        objectMessage = _util.TextMessage("Gracias por consultar nuestros servicios. Hasta pronto. ", userNumber);
                     }
                     else
                     {
@@ -122,7 +130,6 @@ namespace WhatsapNet.Api.Controllers
                                 break;
 
                             case "MENU":
-                            case "HOLA":
                                 objectMessage = _util.ButtonMessage(userNumber);
                                 break;
 
