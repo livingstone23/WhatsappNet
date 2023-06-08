@@ -81,43 +81,59 @@ namespace WhatsapNet.Api.Controllers
 
                     object objectMessage;
 
-                    switch (userText.ToUpper())
+                    if (userText.ToUpper().Contains("BUENAS"))
+                    {
+                        objectMessage = _util.TextMessage("Hola, Bienvenido a PROVIMAD, ¿Como te puedo ayudar?. ", userNumber);
+                    }
+                    else if (userText.ToUpper().Contains("AYUDA"))
+                    {
+                        objectMessage = _util.TextMessage("Hola, estas en el servicio de WhatsApp PROVIMAD, ¡Para ir al menu principal, escribir la palabra 'MENU'! ", userNumber);
+                    }
+                    else
                     {
 
-                        case "TEXT":
-                            objectMessage = _util.TextMessage("Este es un ejemplo de texto", userNumber);
-                            break;
+                        switch (userText.ToUpper())
+                        {
 
-                        case "IMAGE":
-                            objectMessage = _util.ImageMessage("https://biostoragecloud.blob.core.windows.net/resource-udemy-whatsapp-node/image_whatsapp.png", userNumber);
-                            break;
+                            //case "TEXT":
+                            //    objectMessage = _util.TextMessage("Este es un ejemplo de texto", userNumber);
+                            //    break;
 
-                        case "AUDIO":
-                            objectMessage = _util.AudioMessage("https://biostoragecloud.blob.core.windows.net/resource-udemy-whatsapp-node/audio_whatsapp.mp3", userNumber);
-                            break;
-                            
-                        case "VIDEO":
-                            objectMessage = _util.VideoMessage("https://biostoragecloud.blob.core.windows.net/resource-udemy-whatsapp-node/video_whatsapp.mp4", userNumber);
-                            break;
+                            //case "IMAGE":
+                            //    objectMessage = _util.ImageMessage("https://biostoragecloud.blob.core.windows.net/resource-udemy-whatsapp-node/image_whatsapp.png", userNumber);
+                            //    break;
 
-                        case "DOCUMENT":
-                            objectMessage = _util.DocumentMessage("https://biostoragecloud.blob.core.windows.net/resource-udemy-whatsapp-node/document_whatsapp.pdf", userNumber);
-                            break;
+                            //case "AUDIO":
+                            //    objectMessage = _util.AudioMessage("https://biostoragecloud.blob.core.windows.net/resource-udemy-whatsapp-node/audio_whatsapp.mp3", userNumber);
+                            //    break;
+                                
+                            //case "VIDEO":
+                            //    objectMessage = _util.VideoMessage("https://biostoragecloud.blob.core.windows.net/resource-udemy-whatsapp-node/video_whatsapp.mp4", userNumber);
+                            //    break;
 
-                        ///revisar location
-                        case "LOCATION":
-                            objectMessage = _util.LocationMessage(userNumber);
-                            break;
+                            case "DOCUMENT":
+                                objectMessage = _util.DocumentMessage("https://biostoragecloud.blob.core.windows.net/resource-udemy-whatsapp-node/document_whatsapp.pdf", userNumber);
+                                break;
 
-                        case "BUTTON":
-                            objectMessage = _util.ButtonMessage(userNumber);
-                            break;
+                            ///revisar location
+                            case "LOCATION":
+                            case "LOCALIZACIÓN":
+                                objectMessage = _util.LocationMessage(userNumber);
+                                break;
 
-                        default:
-                            objectMessage = _util.TextMessage("Este es un ejemplo de texto", userNumber);
-                            break;
+                            case "MENU":
+                            case "HOLA":
+                                objectMessage = _util.ButtonMessage(userNumber);
+                                break;
+
+                            default:
+                                objectMessage = _util.TextMessage("Este es un ejemplo de texto", userNumber);
+                                break;
+                        }
+                    
+
+                    
                     }
-
                     await _whatsappCloudSendMessage.Execute(objectMessage);
                 }
                     

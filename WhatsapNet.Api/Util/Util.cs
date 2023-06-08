@@ -86,7 +86,7 @@
                 type = "location",
                 location = new
                 {
-                    latitud = "40.449727",
+                    latitude = "40.449727",
                     longitude = "-3.623424",
                     name = "Provimad",
                     address = "C. de Miguel Yuste, 18, Planta 4ª oficina 1, 28037 Madrid"
@@ -107,7 +107,7 @@
                     type ="button",
                     body = new
                     {
-                        text = "Selecciona una opción"
+                        text = "Bienvenido a PROVIMAD gracias por solicitar nuestro servicio de WhatsApp ¿En que podemos ayudarte? para atender su solicitud es muy importante que mantenga una comunicación  al Seleccionar una opción"
                     },
                     action = new
                     {
@@ -119,7 +119,7 @@
                                 reply = new
                                 {
                                     id = "01",
-                                    title = "Comprar"
+                                    title = "Localización"
                                 }
                             },
                             new
@@ -128,7 +128,15 @@
                                 reply = new
                                 {
                                     id = "02",
-                                    title = "Vender"
+                                    title = "Productos"
+                                }
+                            },new
+                            {
+                                type = "reply",
+                                reply = new
+                                {
+                                    id = "03",
+                                    title = "Atención_de_agente"
                                 }
                             }
                         }
