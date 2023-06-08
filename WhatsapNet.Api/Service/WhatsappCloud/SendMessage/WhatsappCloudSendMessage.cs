@@ -15,8 +15,8 @@ namespace WhatsapNet.Api.Service.WhatsappCloud.SendMessage
             using (var content = new ByteArrayContent(byteData))
             {
                 string endpoint = "https://graph.facebook.com";
-                string phoneNumberId = "114893344880968";
-                string accessToken = "EABSWDD8kElcBAHNkZBidoRYK6Fyp0VtsAEiv9dZAqi0tZA0wMwRfO9k7mCaYYGmyxHRsv2qxNZCkssspNjL0xB4dYKzdaZCoA9eEVbyhStAxf37V3rMaZClLRHOLNokoMTNzTi4u9ZBXxcWrwuIhLebmJRBdSQ0IQEnPUc2klaZAyrwFi3IVfDwq";
+                string phoneNumberId = "";
+                string accessToken = "";
                 string uri = $"{endpoint}/v15.0/{phoneNumberId}/messages";
 
                 content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
